@@ -102,33 +102,5 @@ $$
 
 4. Calculate the attention scores using the formula above.
 
-4.1. $$ QK^T $$: We end up with the unscaled dot product similarities between all possible combinations of queries and keys for each word.
 
-4.2. $$ \frac{QK^T}{\sqrt{d_k}} $$: We scale the dot product similarities by the square root of $d_k$.
-    * $d_k$: Is the dimension of the key matrix.
 
-5. The output is a weighted sum of the values (**V**), focusing on important parts of the sentence.
-
----
-
-## Optional: Simple Python Illustration (Using NumPy)
-
-```python
-import numpy as np
-
-def softmax(x):
-    e_x = np.exp(x - np.max(x, axis=-1, keepdims=True))
-    return e_x / e_x.sum(axis=-1, keepdims=True)
-
-# Example Q, K, V matrices (3 words, embedding dim 4)
-Q = np.array([[1,0,1,0], [0,1,0,1], [1,1,0,0]])
-K = np.array([[1,0,1,0], [0,1,0,1], [1,1,0,0]])
-V = np.array([[1,0,0,1], [0,2,1,0], [1,0,2,1]])
-
-dk = Q.shape[-1]
-scores = np.dot(Q, K.T) / np.sqrt(dk)
-weights = softmax(scores)
-output = np.dot(weights, V)
-
-print("Attention Weights:\n", weights)
-print("Output:\n", output)
