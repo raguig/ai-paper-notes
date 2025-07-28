@@ -1,4 +1,4 @@
-#Attention in Transformers
+# Attention in Transformers
 
 Before the Transformer architecture, many advanced models like **RNN**, **LSTM**, and **GRNN** were widely used for sequence tasks such as language translation and text generation. These models process data sequentially, step-by-step, which slows down training, especially for long sequences.
 
@@ -10,7 +10,7 @@ The **Transformer** model replaces this sequential processing with an **attentio
 
 ### 1. Word Embedding
 
-Word Embedding converts words (tokens) into vectors — series of numbers representing their meanings and relationships.
+Word Embedding converts words (tokens) into vectors (series of numbers representing their meanings and relationships).
 
 For example, the words **"boy"** and **"girl"** are mapped to vectors that reflect their semantic similarity. Vectors that are close in space imply related or similar meanings.
 
@@ -23,7 +23,7 @@ Since Transformers do not process words sequentially, they need a way to underst
 Consider the sentence:  
 > *The cat sat on the mat*
 
-Without positional encoding, the model sees the words but not their order. Positional encoding adds unique signals to each word's embedding so the model knows the sequence order — that **"cat"** comes before **"sat"**, etc.
+Without positional encoding, the model sees the words but not their order. Positional encoding adds unique signals to each word's embedding so the model knows the sequence order and that **"cat"** comes before **"sat"**, etc.
 
 ---
 
@@ -44,14 +44,14 @@ Self-Attention compares each word in the sentence with every other word (includi
 
 ### The Attention Formula
 
-\[
+$$
 \text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V
-\]
+$$
 
 - **Q**: Query matrix  
 - **K**: Key matrix  
 - **V**: Value matrix  
-- \(d_k\): dimension of the key vectors (used to scale the dot products)
+- $d_k$ : dimension of the key vectors (used to scale the dot products)
 
 ---
 
@@ -60,7 +60,53 @@ Self-Attention compares each word in the sentence with every other word (includi
 1. Convert each word ("Write", "a", "poem") into embeddings.  
 2. Add positional encodings to these embeddings.  
 3. Multiply the encoded embeddings by learnable weight matrices to get **Q**, **K**, and **V** matrices.  
-4. Calculate the attention scores using the formula above.  
+Given the matrices:
+
+$$
+Encoded Values = \begin{bmatrix}
+1.16 & 0.23 \\
+0.57 & 1.36 \\
+4.41 & -2.16
+\end{bmatrix}
+\quad \text{and} \quad
+QueryWeight^t = \begin{bmatrix}
+0.54 & -0.17 \\
+0.59 & 0.65
+\end{bmatrix}
+$$
+
+
+$$
+Q = Encoded Values*QueryWeight^t = \begin{bmatrix}
+1.16 & 0.23 \\
+0.57 & 1.36 \\
+4.41 & -2.16
+\end{bmatrix}
+\begin{bmatrix}
+0.54 & -0.17 \\
+0.59 & 0.65
+\end{bmatrix}
+$$
+
+
+
+
+$$
+Q = \begin{bmatrix}
+0.7621 & -0.0477 \\
+1.1102 & 0.7871 \\
+1.1070 & -2.1540
+\end{bmatrix}
+$$
+
+
+4. Calculate the attention scores using the formula above.
+
+4.1. $$ QK^T $$: We end up with the unscaled dot product similarities between all possible combinations of queries and keys for each word.
+
+4.2. $$ \frac{QK^T}{\sqrt{d_k}} $$: We scale the dot product similarities by the square root of $d_k$.
+    * $d_k$: Is the dimension of the key matrix.
+
 5. The output is a weighted sum of the values (**V**), focusing on important parts of the sentence.
 
 ---
