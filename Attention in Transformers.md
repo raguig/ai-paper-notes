@@ -99,8 +99,46 @@ Q = \begin{bmatrix}
 \end{bmatrix}
 $$
 
+4. Calculate the Attention Scores Using the Formula
 
-4. Calculate the attention scores using the formula above.
+  4.1. $Q \cdot K^\top$
+
+  We compute the dot product of the Query matrix \( Q \) and the transpose of the Key matrix \( K \), denoted as $\( Q \cdot K^\top \)$.
+
+This operation results in the **unscaled dot-product similarities** between all possible combinations of queries and keys for each word in the sequence.
+
+---
+
+#### 4.2. $\frac{Q \cdot K^\top}{\sqrt{d_k}}$
+
+We scale the dot-product similarities by $\( \sqrt{d_k} \)$ , where:
+
+- $\( d_k \)$: is the dimensionality of the key vectors.
+
+This prevents the values from growing too large and stabilizes gradients during training.
+
+---
+
+#### 4.3. $\text{Softmax}\left(\frac{Q \cdot K^\top}{\sqrt{d_k}}\right)$
+
+We apply the **softmax function** to each row of the scaled similarity matrix, turning the values into a probability distribution:
+
+- Each row sums to 1.
+- It reflects how much attention each word pays to the others.
+
+---
+
+#### 4.4. $\text{Softmax}\left(\frac{Q \cdot K^\top}{\sqrt{d_k}}\right) \cdot V$
+
+Finally, we multiply the result of the softmax with the Value matrix \( V \), producing the final attention output.
+
+Each word’s output is now a weighted sum of all values, where weights are based on attention scores.
+
+
+
+
+
+
 
 
 
